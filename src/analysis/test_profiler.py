@@ -1,18 +1,37 @@
 
-from dataset_loader import load_dataset
+import pandas as pd
+
 from dataset_profiler import profile_dataset
 
-# Load the dataset
-df = load_dataset("data/raw/sales.csv")
 
-# Generate the profile
-result = profile_dataset(df)
+def test_total_rows():
+    df = pd.DataFrame({
+        "name": ["A", "B", "C"],
+        "age": [20, 21, 22]
+    })
 
-# Access individual results
-print("Total rows:", result["total_rows"])
-print("Total columns:", result["total_columns"])
-print("Missing values:", result["total_missing_values"])
-print("Duplicate rows:", result["duplicate_rows"])
+    result = profile_dataset(df)
 
-# Access age-specific missing values
-print("Missing ages:", result["missing_values"]["age"])
+    assert result["total_rows"] == 3
+
+
+def test_total_columns():
+    df = pd.DataFrame({
+        "name": ["A", "B"],
+        "age": [20, 21]
+    })
+
+    result = profile_dataset(df)
+
+    assert result["total_columns"] == 2
+
+
+def test_missing_values():
+    df = pd.DataFrame({
+        "name": ["A", "B", "C"],
+        "age": [20, None, 22]
+    })
+
+    result = profile_dataset(df)
+
+    assert result["total_missing_values"] == 1
